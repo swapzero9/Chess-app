@@ -1,7 +1,9 @@
 <template>
   <div>
     <div id="training-board" @click="highlightSquare"></div>
-    <button @click="removeHighlight">Remove Highlighting</button>
+    <div class="buttons">
+      <button @click="removeHighlight">Remove Highlighting</button>
+    </div>
   </div>
 </template>
 
@@ -23,24 +25,24 @@ export default {
   },
   methods: {
     highlightSquare(e) {
-      if (e.target.classList[0] == "square-55d63") {
-        if (e.target.style.background == "yellow")
-          e.target.style.background = "";
+      if (e.target.classList.contains("square-55d63")) {
+        if (e.target.classList.contains("highlighted"))
+          e.target.classList.remove("highlighted");
         else {
-          e.target.style.background = "yellow";
+          e.target.classList.add("highlighted");
         }
-      } else if (e.path[1].classList[0] == "square-55d63") {
-        if (e.path[1].style.background == "yellow")
-          e.path[1].style.background = "";
+      } else if (e.path[1].classList.contains("square-55d63")) {
+        if (e.path[1].classList.contains("highlighted"))
+          e.path[1].classList.remove("highlighted");
         else {
-          e.path[1].style.background = "yellow";
+          e.path[1].classList.add("highlighted");
         }
       }
     },
     removeHighlight() {
       let dd = document.getElementsByClassName("square-55d63");
       for (let d of dd) {
-        d.style.background = "";
+        d.classList.remove("highlighted");
       }
     },
   },
@@ -55,5 +57,35 @@ export default {
 <style>
 #training-board {
   width: 500px;
+}
+
+.highlighted[class*="white"] {
+  background: rgb(255, 118, 118);
+}
+
+.highlighted[class*="black"] {
+  background: rgb(255, 70, 70);
+}
+
+.buttons {
+  margin-top: 15px;
+}
+
+button {
+  margin: 7px;
+  padding: 7px;
+  font-size: 14px;
+  border-radius: 5px;
+  outline: none;
+  border: transparent 2px solid;
+  background: rgb(255, 226, 214);
+}
+
+button:hover {
+  border: lightskyblue 2px solid;
+}
+
+button:active {
+  border: lightcoral 2px solid;
 }
 </style>

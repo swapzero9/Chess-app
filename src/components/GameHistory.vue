@@ -46,8 +46,8 @@ export default {
             ]);
           }
         } else {
-			this.formattedHistory = []
-		}
+          this.formattedHistory = [];
+        }
       },
     },
   },
