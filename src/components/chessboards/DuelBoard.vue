@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div id="duel-board" @click="highlightSquare"></div>
+    <div
+      id="duel-board"
+      @click="highlightSquare"
+    ></div>
     <div class="buttons">
       <button v-on:click="resetBoard">New Game</button>
       <button v-on:click="copyPgn">Copy PGN</button>
@@ -21,7 +24,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       game = Chess();
-      console.log(this.props);
       board = ChessBoard("duel-board", {
         draggable: true,
         position: "start",
@@ -34,7 +36,7 @@ export default {
           let move = game.move({
             from: source,
             to: target,
-            promotion: "q",
+            promotion: this.promotion,
           });
 
           if (move === null) {
@@ -78,8 +80,9 @@ export default {
         },
         onSnapEnd: () => {
           board.position(game.fen());
-          this.removeHighlight()
+          this.removeHighlight();
           this.$emit("history", game.pgn());
+          this.pgn = game.pgn()
         },
       });
     });
@@ -92,13 +95,14 @@ export default {
     },
     copyPgn(e) {
       console.log(game.pgn());
-      navigator.clipboard.writeText(game.pgn())
-      .then(() => {
-        console.log("succ")
-      })
-      .catch(() => {
-        console.error("err")
-      })
+      navigator.clipboard
+        .writeText(game.pgn())
+        .then(() => {
+          console.log("succ");
+        })
+        .catch(() => {
+          console.error("err");
+        });
     },
     makeMove(source, target) {
       console.log(this.engine);
@@ -159,6 +163,7 @@ export default {
         });
     },
     highlightSquare(e) {
+      console.log(e)
       if (e.target.classList.contains("square-55d63")) {
         if (e.target.classList.contains("highlighted"))
           e.target.classList.remove("highlighted");
@@ -182,12 +187,14 @@ export default {
   },
   props: {
     selectedengine: Object,
+    prom: Object,
   },
   data() {
     return {
-      promotion: true,
+      promotion: "",
       promoted: "",
       engine: "",
+      pgn: "",
     };
   },
   watch: {
@@ -195,6 +202,12 @@ export default {
       immediate: true,
       handler(cur, old) {
         this.engine = cur.engine == "" ? "random" : cur.engine;
+      },
+    },
+    prom: {
+      immediate: true,
+      handler(cur, old) {
+        this.promotion = cur.promotion;
       },
     },
   },
@@ -229,7 +242,7 @@ button {
 }
 
 button:hover {
-  border: lightskyblue 2px solid
+  border: lightskyblue 2px solid;
 }
 
 button:active {

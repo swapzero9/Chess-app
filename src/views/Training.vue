@@ -3,7 +3,7 @@
     <Header title="Training" />
     <div class="split">
       <TrainingBoard @history="updateHistory" />
-      <GameHistory :history="{ hist }" />
+      <GameHistory :history="{ hist }" :keepScore="true" />
     </div>
   </div>
 </template>
@@ -34,8 +34,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #duel-board {
   width: 500px;
+}
+
+.split {
+  display: flex;
 }
 </style>

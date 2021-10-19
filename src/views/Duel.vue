@@ -1,10 +1,26 @@
 <template>
   <div>
     <Header title="Duel" />
-    <CustomSelect :options="op" @selectedOption="updateEngine" Name="Engine" placeholder="Select an engine to play with"></CustomSelect>
+    <div class="split-horizontal">
+      <CustomSelect
+        :options="engine_options"
+        @selectedOption="updateEngine"
+        Name="Engine"
+        placeholder="Select an engine to play with"
+      ></CustomSelect>
+      <CustomSelect
+        :options="promotion_options"
+        @selectedOption="updatePromotion"
+        Name="Promotions"
+      ></CustomSelect>
+    </div>
     <div class="split">
-      <DuelBoard @history="updateHistory" :selectedengine="{ engine }" />
-      <GameHistory :history="{ hist }" />
+      <DuelBoard
+        @history="updateHistory"
+        :selectedengine="{ engine }"
+        :prom="{ promotion }"
+      />
+      <GameHistory :history="{ hist }" :keepScore="false" />
     </div>
   </div>
 </template>
@@ -27,7 +43,30 @@ export default {
     return {
       hist: "",
       engine: "",
-      op: [
+      promotion: "q",
+      promotion_options: [
+        {
+          key: 1,
+          value: "q",
+          text: "Queen",
+        },
+        {
+          key: 2,
+          value: "r",
+          text: "Rook",
+        },
+        {
+          key: 3,
+          value: "n",
+          text: "Knight",
+        },
+        {
+          key: 4,
+          value: "b",
+          text: "Bishop",
+        },
+      ],
+      engine_options: [
         {
           key: 1,
           value: "random",
@@ -57,15 +96,28 @@ export default {
       this.hist = data;
     },
     updateEngine(data) {
-      console.log(data);
       this.engine = data;
+    },
+    updatePromotion(data) {
+      this.promotion = data;
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .split {
   display: flex;
 }
+.split-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 250px;
+}
+
+.split-horizontal>* {
+  flex-grow: 1;
+}
+
 </style>
