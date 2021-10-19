@@ -1,6 +1,6 @@
 <template>
   <select @change="updateValue" :name="Name" :title="Name">
-    <option disabled selected value="">{{ placeholder }}</option>
+    <option v-if="placeholder" disabled selected value="">{{ placeholder }}</option>
     <option
       v-for="option in options"
       v-bind:value="option.value"
