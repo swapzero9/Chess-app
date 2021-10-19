@@ -53,7 +53,6 @@ export default {
       game.reset()
       this.$emit("history", game.pgn());
       board.position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-      this.removeHighlight()
       fetch("http://localhost:8000/training/last_training_game", {
         method: "GET"
       })
