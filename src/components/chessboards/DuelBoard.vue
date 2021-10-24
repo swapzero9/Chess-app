@@ -2,7 +2,8 @@
   <div>
     <div
       id="duel-board"
-      @click="highlightSquare"
+      @click.exact="highlightSquare"
+      @click.ctrl="removeHighlight"
     ></div>
     <div class="buttons">
       <button v-on:click="resetBoard">New Game</button>
@@ -56,22 +57,27 @@ export default {
 
           if (game.in_checkmate()) {
             console.log("checkmate");
+            this.emitSaveGame()
             return false;
           }
           if (game.insufficient_material()) {
             console.log("insufficietn");
+            this.emitSaveGame()
             return false;
           }
           if (game.in_threefold_repetition()) {
             console.log("three");
+            this.emitSaveGame()
             return false;
           }
           if (game.in_stalemate()) {
             console.log("stalemate");
+            this.emitSaveGame()
             return false;
           }
           if (game.in_draw()) {
             console.log("draw");
+            this.emitSaveGame()
             return false;
           }
 
@@ -105,7 +111,6 @@ export default {
         });
     },
     makeMove(source, target) {
-      console.log(this.engine);
       fetch("http://localhost:8000/duel/position", {
         method: "POST",
         headers: {
@@ -131,22 +136,27 @@ export default {
               if (game.game_over()) {
                 if (game.in_checkmate()) {
                   console.log("checkmate");
+                  this.emitSaveGame()
                   return false;
                 }
                 if (game.insufficient_material()) {
                   console.log("insufficietn");
+                  this.emitSaveGame()
                   return false;
                 }
                 if (game.in_threefold_repetition()) {
                   console.log("three");
+                  this.emitSaveGame()
                   return false;
                 }
                 if (game.in_stalemate()) {
                   console.log("stalemate");
+                  this.emitSaveGame()
                   return false;
                 }
                 if (game.in_draw()) {
                   console.log("draw");
+                  this.emitSaveGame()
                   return false;
                 }
               }
@@ -163,7 +173,6 @@ export default {
         });
     },
     highlightSquare(e) {
-      console.log(e)
       if (e.target.classList.contains("square-55d63")) {
         if (e.target.classList.contains("highlighted"))
           e.target.classList.remove("highlighted");
@@ -184,6 +193,10 @@ export default {
         d.classList.remove("highlighted");
       }
     },
+    emitSaveGame() {
+      let pgn = game.pgn()
+      this.$emit("finalPgn", pgn)
+    }
   },
   props: {
     selectedengine: Object,

@@ -58,8 +58,10 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Roboto Mono", monospace;
   background: #bbb;
+}
+body *:not(i) {
+  font-family: "Roboto Mono", monospace !important;
 }
 
 body::-webkit-scrollbar {

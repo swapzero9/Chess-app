@@ -1,7 +1,11 @@
 <template>
   <div>
     <button @click="fetchPgn">Next Game</button>
-    <div id="training-board" @click="highlightSquare"></div>
+    <div
+      id="training-board"
+      @click.exact="highlightSquare"
+      @click.ctrl.prevent.exact="removeHighlight"
+    ></div>
     <div class="buttons">
       <button @click="removeHighlight">Remove Highlighting</button>
       <button @click="movePop">unmake move</button>
@@ -17,15 +21,15 @@ import Chess from "chess.js";
 let game;
 let board;
 export default {
-  name: "DuelBoard",
+  name: "TrainingBoard",
   components: {},
   mounted() {
     board = ChessBoard("training-board", {
       draggable: false,
-    })
-    game = Chess()
+    });
+    game = Chess();
     // mechanics for loading new games
-    this.fetchPgn()
+    this.fetchPgn();
   },
   methods: {
     highlightSquare(e) {
@@ -50,66 +54,70 @@ export default {
       }
     },
     fetchPgn(b) {
-      game.reset()
+      game.reset();
       this.$emit("history", game.pgn());
-      board.position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+      board.start();
       fetch("http://localhost:8000/training/last_training_game", {
-        method: "GET"
+        method: "GET",
       })
-      .then((data) => {
-        return data.json()
-      })
-      .then((data) => {
-        let pgn = data.pgn.split("\n");
-        pgn = pgn[pgn.length - 1]
-        this.pgn = pgn
-        let temp = pgn.split(" ")
-        this.pgnArray = [];
-        this.chessHistory = [];
-        this.chessHistory.push("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-        for (let i = 0; i < temp.length; i += 3) {
-          this.pgnArray.push(temp[i + 1])
-          this.pgnArray.push(temp[i + 2])
-        }
-        this.pgnArray = this.pgnArray.filter((x) => {
-          return x != undefined
+        .then((data) => {
+          return data.json();
         })
-        // if autoplay
-        this.playGame()
-      })
+        .then((data) => {
+          if (data.error) {
+            console.error(data.error);
+            return;
+          }
+          let pgn = data.pgn.split("\n");
+          pgn = pgn[pgn.length - 1];
+          this.pgn = pgn;
+          let temp = pgn.split(" ");
+          this.pgnArray = [];
+          this.chessHistory = [];
+          this.chessHistory.push(
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+          );
+          for (let i = 0; i < temp.length; i += 3) {
+            this.pgnArray.push(temp[i + 1]);
+            this.pgnArray.push(temp[i + 2]);
+          }
+          this.pgnArray = this.pgnArray.filter((x) => {
+            return x != undefined;
+          });
+          // if autoplay
+          this.playGame();
+        });
     },
-    fetchTrainingSessions() {
-
-    },
+    fetchTrainingSessions() {},
     async playGame() {
-      this.index = -1
+      this.index = -1;
       for (let move of this.pgnArray) {
-        this.makeMove(move, board)
-        await this.timeout(300)
+        this.makeMove(move, board);
+        await this.timeout(400);
       }
     },
     makeMove(move, board) {
-      this.index++
-      game.move(move)
-      board.position(game.fen())
-      this.chessHistory.push(game.fen())
+      this.index++;
+      game.move(move);
+      board.position(game.fen());
+      this.chessHistory.push(game.fen());
       this.$emit("history", game.pgn());
     },
     timeout(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+      return new Promise((resolve) => setTimeout(resolve, ms));
     },
     movePop() {
       if (this.index > 0) {
         this.index--;
-        board.position(this.chessHistory[this.index])
+        board.position(this.chessHistory[this.index]);
       }
     },
     moveFor() {
       if (this.index < this.chessHistory.length) {
         this.index++;
-        board.position(this.chessHistory[this.index])
+        board.position(this.chessHistory[this.index]);
       }
-    }
+    },
   },
   data() {
     return {
@@ -122,7 +130,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #training-board {
   width: 500px;
 }

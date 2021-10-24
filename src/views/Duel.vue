@@ -17,6 +17,7 @@
     <div class="split">
       <DuelBoard
         @history="updateHistory"
+        @finalPgn="saveGame"
         :selectedengine="{ engine }"
         :prom="{ promotion }"
       />
@@ -101,6 +102,27 @@ export default {
     updatePromotion(data) {
       this.promotion = data;
     },
+    saveGame(data) {
+      let json = {
+        opponent: this.engine,
+        pgn: data,
+      }
+
+      fetch("http://localhost:8000/duel/save_game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(json)
+      })
+      .then((data) => {
+        return data.json()
+      })
+      .then((data) => {
+        console.log(data)
+      })
+    },
   },
 };
 </script>
@@ -113,11 +135,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  width: 250px;
+  width: 350px;
 }
 
-.split-horizontal>* {
+.split-horizontal > * {
   flex-grow: 1;
 }
-
 </style>
