@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="fetchPgn">Next Game</button>
     <div
       id="training-board"
       @click.exact="highlightSquare"
@@ -18,7 +17,6 @@
 import ChessBoard from "chessboardjs-vue";
 import Chess from "chess.js";
 
-let game;
 let board;
 export default {
   name: "TrainingBoard",
@@ -27,9 +25,10 @@ export default {
     board = ChessBoard("training-board", {
       draggable: false,
     });
-    game = Chess();
-    // mechanics for loading new games
-    this.fetchPgn();
+    board.start()
+  },
+  props: {
+    gamePgn: String
   },
   methods: {
     highlightSquare(e) {
@@ -53,50 +52,25 @@ export default {
         d.classList.remove("highlighted");
       }
     },
-    fetchPgn(b) {
-      game.reset();
-      this.$emit("history", game.pgn());
-      board.start();
-      fetch("http://localhost:8000/training/last_training_game", {
-        method: "GET",
-      })
-        .then((data) => {
-          return data.json();
-        })
-        .then((data) => {
-          if (data.error) {
-            console.error(data.error);
-            return;
-          }
-          let pgn = data.pgn.split("\n");
-          pgn = pgn[pgn.length - 1];
-          this.pgn = pgn;
-          let temp = pgn.split(" ");
-          this.pgnArray = [];
-          this.chessHistory = [];
-          this.chessHistory.push(
-            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-          );
-          for (let i = 0; i < temp.length; i += 3) {
-            this.pgnArray.push(temp[i + 1]);
-            this.pgnArray.push(temp[i + 2]);
-          }
-          this.pgnArray = this.pgnArray.filter((x) => {
-            return x != undefined;
-          });
-          // if autoplay
-          this.playGame();
-        });
+    setupGame(pgn) {
+      this.chessHistory = []
+      board.start()
+      let game = Chess();
+      game.load_pgn(pgn);
+      let moves = game.history()
+      game.reset()
+      this.index = -1
+      this.playGame(moves, game)
     },
-    fetchTrainingSessions() {},
-    async playGame() {
+    async playGame(moves, game) {
       this.index = -1;
-      for (let move of this.pgnArray) {
-        this.makeMove(move, board);
+      await this.timeout(1000);
+      for (let move of moves) {
+        this.makeMove(move, game);
         await this.timeout(400);
       }
     },
-    makeMove(move, board) {
+    makeMove(move, game) {
       this.index++;
       game.move(move);
       board.position(game.fen());
@@ -117,6 +91,16 @@ export default {
         this.index++;
         board.position(this.chessHistory[this.index]);
       }
+    },
+  },
+  watch: {
+    gamePgn: {
+      immediate: true,
+      handler(cur, old) {
+        if (cur != '' && cur != old) {
+          this.setupGame(cur)
+        }
+      },
     },
   },
   data() {

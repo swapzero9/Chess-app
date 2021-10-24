@@ -80,6 +80,7 @@ export default {
     },
     async playGame(moves, game) {
       this.index = -1;
+      await this.timeout(1000);
       for (let move of moves) {
         this.makeMove(move, game);
         await this.timeout(400);
