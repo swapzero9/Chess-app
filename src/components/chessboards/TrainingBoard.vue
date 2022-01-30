@@ -1,14 +1,16 @@
 <template>
   <div>
+    <h3 v-if="whitePlayerName">{{ whitePlayerName }}</h3>
     <div
       id="training-board"
       @click.exact="highlightSquare"
       @click.ctrl.prevent.exact="removeHighlight"
     ></div>
+    <h3 v-if="whitePlayerName">{{ blackPlayerName }}</h3>
     <div class="buttons">
-      <button @click="removeHighlight">Remove Highlighting</button>
-      <button @click="movePop">unmake move</button>
-      <button @click="moveFor">move forw</button>
+      <button title="Unmake the last move that was done on the board." v-if=!buttonDisabled @click="movePop">Move back</button>
+      <button title="Make the next move in history on the board." v-if=!buttonDisabled @click="moveFor">Move forward</button>
+      <button title="Remove Highlighting from the board." @click="removeHighlight">Remove Highlighting</button>
     </div>
   </div>
 </template>
@@ -53,7 +55,10 @@ export default {
       }
     },
     setupGame(pgn) {
+      this.getPlayerNames(pgn)
+      this.buttonDisabled = true
       this.chessHistory = []
+      this.removeHighlight()
       board.start()
       let game = Chess();
       game.load_pgn(pgn);
@@ -69,6 +74,7 @@ export default {
         this.makeMove(move, game);
         await this.timeout(400);
       }
+      this.buttonDisabled = false
     },
     makeMove(move, game) {
       this.index++;
@@ -92,6 +98,11 @@ export default {
         board.position(this.chessHistory[this.index]);
       }
     },
+    getPlayerNames(pgn) {
+      // console.log(pgn)
+      this.whitePlayerName = /White "(.*)"/gmi.exec(pgn)[1]
+      this.blackPlayerName = /Black "(.*)"/gmi.exec(pgn)[1]
+    }
   },
   watch: {
     gamePgn: {
@@ -102,10 +113,19 @@ export default {
         }
       },
     },
+    buttonDisabled: {
+      immediate: true,
+      handler(cur, old) {
+        this.$emit("disableStart", cur)
+      }
+    }
   },
   data() {
     return {
       pgn: "",
+      buttonDisabled: false,
+      whitePlayerName: "",
+      blackPlayerName: "",
       pgnArray: Array,
       chessHistory: Array,
       index: Number,
@@ -147,5 +167,9 @@ button:hover {
 
 button:active {
   border: lightcoral 2px solid;
+}
+
+h3 {
+  margin: 4px 0;
 }
 </style>

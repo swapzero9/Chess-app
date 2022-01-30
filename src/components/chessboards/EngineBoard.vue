@@ -2,9 +2,9 @@
   <div>
     <div id="engine-board" @click.exact="highlightSquare" @click.ctrl.prevent="removeHighlight"></div>
     <div class="buttons">
-      <button @click="removeHighlight">Remove Highlighting</button>
-      <button @click="movePop">unmake move</button>
-      <button @click="moveFor">move forw</button>
+      <button title="Unmake the last move that was done on the board." v-if=!buttonDisabled @click="movePop">Move back</button>
+      <button title="Make the next move in history on the board." v-if=!buttonDisabled @click="moveFor">Move forward</button>
+      <button title="Remove Highlighting from the board." @click="removeHighlight">Remove Highlighting</button>
     </div>
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
     return {
       chessHistory: Array,
       index: Number,
+      buttonDisabled: true
     };
   },
   props: {
@@ -70,7 +71,9 @@ export default {
       }
     },
     setupGame(pgn) {
+      this.removeHighlight()
       this.chessHistory = []
+      this.buttonDisabled = true
       let game = Chess()
       game.load_pgn(pgn)
       let moves = game.history()
@@ -85,6 +88,7 @@ export default {
         this.makeMove(move, game);
         await this.timeout(400);
       }
+      this.buttonDisabled = false
     },
     makeMove(move, game) {
       this.index++;

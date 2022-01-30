@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header title="Duel" />
+    <Header title="Duel" description="Select an engine from the first dropdown and play a game against it." />
     <div class="split-horizontal">
       <CustomSelect
         :options="engine_options"
@@ -8,6 +8,7 @@
         Name="Engine"
         placeholder="Select an engine to play with"
       ></CustomSelect>
+      <h4>Select pawn promotion type</h4>
       <CustomSelect
         :options="promotion_options"
         @selectedOption="updatePromotion"
@@ -140,5 +141,9 @@ export default {
 
 .split-horizontal > * {
   flex-grow: 1;
+}
+
+.split-horizontal > h4 {
+  margin: 0;
 }
 </style>

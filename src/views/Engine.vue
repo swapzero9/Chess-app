@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header title="Engine" />
+    <Header title="Engine" description="Select two engine players and let them battle against each other. Note that the game setup can take a few minutes, since the game is played on a backend server."/>
     <div class="select-engines">
       <h5>Select white player</h5>
       <h5>Select black player</h5>
@@ -18,6 +18,8 @@
       />
       <div class="buttons">
         <button @click="startGame">Start the Game!</button>
+        <button v-if="!showLoader" @click="copyPGN">Copy PGN</button>
+        <Loader v-if="showLoader" />
       </div>
     </div>
     <div class="split">
@@ -32,6 +34,7 @@ import Header from "../components/Header.vue";
 import GameHistory from "../components/GameHistory.vue";
 import EngineBoard from "../components/chessboards/EngineBoard.vue";
 import CustomSelect from "../components/CustomSelect.vue";
+import Loader from "../components/Loader.vue"
 
 export default {
   name: "Training",
@@ -40,6 +43,7 @@ export default {
     Header,
     GameHistory,
     CustomSelect,
+    Loader
   },
   data() {
     return {
@@ -47,6 +51,7 @@ export default {
       pgn: "",
       playerWhite: "",
       playerBlack: "",
+      showLoader: false,
       engine_options: [
         {
           key: 1,
@@ -81,11 +86,22 @@ export default {
     updatePlayerBlack(data) {
       this.playerBlack = data;
     },
+    copyPGN(data) {
+      navigator.clipboard
+        .writeText(this.pgn)
+        .then(() => {
+          console.log("succ");
+        })
+        .catch(() => {
+          console.error("err");
+        });
+    },
     startGame() {
       if (this.playerWhite == '' || this.playerBlack == '') {
         alert("You didn't select the engine!")
         return
       }
+      this.showLoader = true
       this.pgn = ""
       fetch("http://localhost:8000/engine/sparing", {
         method: "POST",
@@ -105,6 +121,7 @@ export default {
           console.log(data.error)
           return
         }
+        this.showLoader = false
         this.pgn = data.pgn;
       })
     }
@@ -119,6 +136,7 @@ export default {
 
 .buttons {
   margin-top: 10px;
+  display: flex;
 }
 
 button {

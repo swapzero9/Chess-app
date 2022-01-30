@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>hurray im doing it</h1>
+    <h1>Chess app</h1>
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae magnam
       quisquam recusandae nemo maxime non? Deserunt pariatur aliquam, vel alias

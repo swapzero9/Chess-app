@@ -6,9 +6,9 @@
       @click.ctrl="removeHighlight"
     ></div>
     <div class="buttons">
-      <button v-on:click="resetBoard">New Game</button>
-      <button v-on:click="copyPgn">Copy PGN</button>
-      <button v-on:click="removeHighlight">Remove Highlighting</button>
+      <button v-on:click="resetBoard" title="Reset game state and start a new one.">New Game</button>
+      <button v-on:click="copyPgn" title="Copy an existing game in PGN format.">Copy PGN</button>
+      <button v-on:click="removeHighlight" title="Remove Highlighting from the board.">Remove Highlighting</button>
     </div>
   </div>
 </template>
@@ -56,27 +56,22 @@ export default {
           }
 
           if (game.in_checkmate()) {
-            console.log("checkmate");
             this.emitSaveGame()
             return false;
           }
           if (game.insufficient_material()) {
-            console.log("insufficietn");
             this.emitSaveGame()
             return false;
           }
           if (game.in_threefold_repetition()) {
-            console.log("three");
             this.emitSaveGame()
             return false;
           }
           if (game.in_stalemate()) {
-            console.log("stalemate");
             this.emitSaveGame()
             return false;
           }
           if (game.in_draw()) {
-            console.log("draw");
             this.emitSaveGame()
             return false;
           }
@@ -98,9 +93,9 @@ export default {
       board.start(false);
       game = Chess();
       this.$emit("history", game.pgn());
+      this.canSelect = true
     },
     copyPgn(e) {
-      console.log(game.pgn());
       navigator.clipboard
         .writeText(game.pgn())
         .then(() => {
@@ -133,34 +128,29 @@ export default {
                 promotion: data.promotion,
               });
               board.position(game.fen());
+              this.$emit("history", game.pgn());
               if (game.game_over()) {
                 if (game.in_checkmate()) {
-                  console.log("checkmate");
                   this.emitSaveGame()
                   return false;
                 }
                 if (game.insufficient_material()) {
-                  console.log("insufficietn");
                   this.emitSaveGame()
                   return false;
                 }
                 if (game.in_threefold_repetition()) {
-                  console.log("three");
                   this.emitSaveGame()
                   return false;
                 }
                 if (game.in_stalemate()) {
-                  console.log("stalemate");
                   this.emitSaveGame()
                   return false;
                 }
                 if (game.in_draw()) {
-                  console.log("draw");
                   this.emitSaveGame()
                   return false;
                 }
               }
-              this.$emit("history", game.pgn());
             })
             .catch((err) => {
               // error parsing json
@@ -208,6 +198,7 @@ export default {
       promoted: "",
       engine: "",
       pgn: "",
+      canSelect: true,
     };
   },
   watch: {
