@@ -72,7 +72,7 @@ export default {
       await this.timeout(1000);
       for (let move of moves) {
         this.makeMove(move, game);
-        await this.timeout(400);
+        await this.timeout(350);
       }
       this.buttonDisabled = false
     },

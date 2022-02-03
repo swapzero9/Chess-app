@@ -77,7 +77,7 @@ body::-webkit-scrollbar-track {
 }
 
 .main-content {
-  margin-left: calc(var(--nav-width) + 0.6em);
+  margin-left: calc(var(--nav-width) + 2em);
   overflow: hidden;
 }
 

@@ -7,6 +7,7 @@
         @selectedOption="updateEngine"
         Name="Engine"
         placeholder="Select an engine to play with"
+        :disableSelect="disableEngineSelect"
       ></CustomSelect>
       <h4>Select pawn promotion type</h4>
       <CustomSelect
@@ -46,6 +47,7 @@ export default {
       hist: "",
       engine: "",
       promotion: "q",
+      disableEngineSelect: false,
       promotion_options: [
         {
           key: 1,
@@ -95,6 +97,11 @@ export default {
   methods: {
     updateHistory(data) {
       //   console.log(data)
+      if (data) {
+        this.disableEngineSelect = true
+      } else {
+        this.disableEngineSelect = false
+      }
       this.hist = data;
     },
     updateEngine(data) {
@@ -104,6 +111,7 @@ export default {
       this.promotion = data;
     },
     saveGame(data) {
+      this.disableEngineSelect = false
       let json = {
         opponent: this.engine,
         pgn: data,

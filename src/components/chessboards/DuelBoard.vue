@@ -6,9 +6,21 @@
       @click.ctrl="removeHighlight"
     ></div>
     <div class="buttons">
-      <button v-on:click="resetBoard" title="Reset game state and start a new one.">New Game</button>
-      <button v-on:click="copyPgn" title="Copy an existing game in PGN format.">Copy PGN</button>
-      <button v-on:click="removeHighlight" title="Remove Highlighting from the board.">Remove Highlighting</button>
+      <button
+        v-on:click="resetBoard"
+        title="Reset game state and start a new one."
+      >
+        New Game
+      </button>
+      <button v-on:click="copyPgn" title="Copy an existing game in PGN format.">
+        Copy PGN
+      </button>
+      <button
+        v-on:click="removeHighlight"
+        title="Remove Highlighting from the board."
+      >
+        Remove Highlighting
+      </button>
     </div>
   </div>
 </template>
@@ -56,23 +68,17 @@ export default {
           }
 
           if (game.in_checkmate()) {
-            this.emitSaveGame()
-            return false;
-          }
-          if (game.insufficient_material()) {
-            this.emitSaveGame()
-            return false;
-          }
-          if (game.in_threefold_repetition()) {
-            this.emitSaveGame()
-            return false;
-          }
-          if (game.in_stalemate()) {
-            this.emitSaveGame()
+            setTimeout(() => {
+              this.emitSaveGame();
+              alert("It's checkmate! You win!");
+            }, 200);
             return false;
           }
           if (game.in_draw()) {
-            this.emitSaveGame()
+            setTimeout(() => {
+              this.emitSaveGame();
+              alert("It's a draw!");
+            }, 200);
             return false;
           }
 
@@ -83,7 +89,7 @@ export default {
           board.position(game.fen());
           this.removeHighlight();
           this.$emit("history", game.pgn());
-          this.pgn = game.pgn()
+          this.pgn = game.pgn();
         },
       });
     });
@@ -93,7 +99,6 @@ export default {
       board.start(false);
       game = Chess();
       this.$emit("history", game.pgn());
-      this.canSelect = true
     },
     copyPgn(e) {
       navigator.clipboard
@@ -131,23 +136,17 @@ export default {
               this.$emit("history", game.pgn());
               if (game.game_over()) {
                 if (game.in_checkmate()) {
-                  this.emitSaveGame()
-                  return false;
-                }
-                if (game.insufficient_material()) {
-                  this.emitSaveGame()
-                  return false;
-                }
-                if (game.in_threefold_repetition()) {
-                  this.emitSaveGame()
-                  return false;
-                }
-                if (game.in_stalemate()) {
-                  this.emitSaveGame()
+                  setTimeout(() => {
+                    this.emitSaveGame();
+                    alert("It's checkmate! You loose!");
+                  }, 200);
                   return false;
                 }
                 if (game.in_draw()) {
-                  this.emitSaveGame()
+                  setTimeout(() => {
+                    this.emitSaveGame();
+                    alert("It's a draw!");
+                  }, 200);
                   return false;
                 }
               }
@@ -184,9 +183,9 @@ export default {
       }
     },
     emitSaveGame() {
-      let pgn = game.pgn()
-      this.$emit("finalPgn", pgn)
-    }
+      let pgn = game.pgn();
+      this.$emit("finalPgn", pgn);
+    },
   },
   props: {
     selectedengine: Object,
@@ -198,7 +197,6 @@ export default {
       promoted: "",
       engine: "",
       pgn: "",
-      canSelect: true,
     };
   },
   watch: {
