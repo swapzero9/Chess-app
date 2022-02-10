@@ -69,7 +69,7 @@ export default {
           break;
         }
       }
-      fetch("http://localhost:8000/training/get_game", {
+      fetch(`${process.env.VUE_APP_APIURL}/training/get_game`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default {
     },
     fetchNodes() {
       // call api to get all the training and validation nodes
-      fetch("http://localhost:8000/training/training_nodes", {
+      fetch(`${process.env.VUE_APP_APIURL}/training/training_nodes`, {
         method: "GET",
       })
       .then(j => {

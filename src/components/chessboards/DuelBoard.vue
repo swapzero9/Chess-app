@@ -111,7 +111,7 @@ export default {
         });
     },
     makeMove(source, target) {
-      fetch("http://localhost:8000/duel/position", {
+      fetch(`${process.env.VUE_APP_APIURL}/duel/position`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -37,7 +37,7 @@ export default {
   mounted() {
     this.duelData = [];
     this.trainingData = [];
-    fetch("http://localhost:8000/statistics/stat_data", {
+    fetch(`${process.env.VUE_APP_APIURL}/statistics/stat_data`, {
       method: "GET",
     })
       .then((j) => {
@@ -63,7 +63,6 @@ export default {
           });
         }
         this.duelData = tempDuelData;
-        console.log(data.training_statistics)
         // training data
         let tempTrainingData = [];
         for (let [key, value] of Object.entries(data.training_statistics)) {

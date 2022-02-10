@@ -65,13 +65,23 @@ export default {
         },
         {
           key: 3,
+          value: "montecarlo",
+          text: "Monte Carlo Engine",
+        },
+        {
+          key: 4,
           value: "stockfish",
           text: "Stockfish Engine",
         },
         {
-          key: 4,
+          key: 5,
           value: "ai",
-          text: "Ai Engine",
+          text: "Ai Engine, Implementation 1",
+        },
+        {
+          key: 6,
+          value: "ai2",
+          text: "Ai Engine, Implementation 2",
         },
       ],
     };
@@ -103,7 +113,7 @@ export default {
       }
       this.showLoader = true
       this.pgn = ""
-      fetch("http://localhost:8000/engine/sparing", {
+      fetch(`${process.env.VUE_APP_APIURL}/engine/sparing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
