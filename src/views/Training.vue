@@ -1,23 +1,23 @@
 <template>
   <div>
-    <Header title="Training" description="Select training session of an AI or one of the validation sessions that it played against other engines. Then select the game from the session and click start to see it." />
+    <Header title="Gry Treningowe" description="Wybierz sesje treningową, zawierającą gry silnika sztucznej inteligencji, lub jedną z sesji walidacyjnych rozegranych przez każdy z silników." />
     <div class="select-nodes">
-      <h4>Select training or validation session</h4>
+      <h4>Wybierz sesję treningową lub walidacyjną</h4>
       <CustomSelect
         :options="trainingNodeOptions"
         @selectedOption="updateTrainingNode"
         Name="TrainingNode"
-        placeholder="Pick me!"
+        placeholder="Wybierz sesję"
       />
       <div v-if="showGameNumber">
         <div class="game-number-box" v-if="totalGames != 0">
-          <h4>Select game number (total games played: {{ totalGames }})</h4>
+          <h4>Wybierz numer gry (łącznie w sesji rozegrano: {{ totalGames }})</h4>
           <input type="number" min="1" :max="totalGames" v-model="selectedGameNumber"/>
         </div>
-        <h4 v-else>No games in session</h4>
+        <h4 v-else>Brak gier w sesji</h4>
       </div>
     </div>
-    <button @click="getGame" :disabled="disableStartButton">Start the Game!</button>
+    <button @click="getGame" :disabled="disableStartButton">Rozpocznij grę!</button>
     <div class="split">
       <TrainingBoard @history="updateHistory" :gamePgn="pgn" @disableStart="disableStart" />
       <GameHistory :history="{ hist }" />
@@ -155,9 +155,38 @@ input {
   outline: none;
   margin-bottom: 10px;
   padding: 2px 6px;
-  border: 1px solid black;
+  border: 0;
   border-radius: 5px;
-  min-width: 170px;
+  min-width: 80px;
+  box-shadow: 0 0 0.6em 0 rgba(0, 0, 0, 0.2);
   font-size: 15px;
+}
+
+button {
+  margin-bottom: 15px;
+}
+
+.game-number-box {
+  margin-top: 10px;
+}
+
+button {
+  margin: 7px;
+  padding: 7px;
+  font-size: 14px;
+  border-radius: 5px;
+  outline: none;
+  border: transparent 2px solid;
+  background: var(--button-color);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  border: lightskyblue 2px solid;
+}
+
+button:active {
+  border: lightcoral 2px solid;
 }
 </style>

@@ -1,16 +1,16 @@
 <template>
   <div>
-    <Header title="Game statistics" />
-    <h4>Duel Stats</h4>
+    <Header title="Statystyki" />
+    <h4>Statystyki pojedynków</h4>
     <div class="chart-grid" v-if="duelData">
       <div v-for="d in duelData" v-bind:key="d.canvasId">
-        <bar-chart :canvasId="d.canvasId" :chartData="d"></bar-chart>
+        <bar-chart :canvasId="d.canvasId" :chartData="d" :start="0"></bar-chart>
       </div>
     </div>
-    <h4>Training Stats</h4>
+    <h4>Statystki z gier treningowych silników AI</h4>
     <div class="chart-grid" v-if="trainingData">
       <div v-for="d in trainingData" v-bind:key="d.canvasId">
-        <bar-chart :canvasId="d.canvasId" :chartData="d"></bar-chart>
+        <bar-chart :canvasId="d.canvasId" :chartData="d" :start="1"></bar-chart>
       </div>
     </div>
   </div>
@@ -31,7 +31,7 @@ export default {
       duelData: Array,
       trainingData: Array,
       validationData: Array,
-      colors: ["#C8D5B9", "#808FC0A9", "#8068B0AB"],
+      colors: ["#84beff", "#ff8884", "#8884FF", "#beff84", "#ffc584"],
     };
   },
   mounted() {
@@ -49,12 +49,12 @@ export default {
         for (let [key, value] of Object.entries(data.duel_statistics)) {
           tempDuelData.push({
             canvasId: `${key}`,
-            title: `Games by ${key} against People`,
-            labels: ["Wins", "Losses", "Draws"],
+            title: `Pojedynki rozegrane przez ${window.engineNamesByKeys[key]}`,
+            labels: ["Wygrane", "Przegrane", "Remisy"],
             colors: this.colors,
             records: [
               {
-                label: `Duel Games, Total: ${value.reduce((p, c) => {
+                label: `Gry pojedynkowe, łącznie: ${value.reduce((p, c) => {
                   return p + c
                 })}`,
                 d: value,
@@ -69,12 +69,12 @@ export default {
           let id = key.toLowerCase().replaceAll(" ", "").replaceAll(".", "")
           tempTrainingData.push({
             canvasId: `${id}`,
-            title: `Games in ${key}`,
-            labels: ["Wins by White", "Wins by Black", "Draws"],
+            title: `Gry w ${key}`,
+            labels: ["Wygrane białymi", "Wygrane czarnymi", "Remisy"],
             colors: this.colors,
             records: [
               {
-                label: `Training Games, Total: ${value.reduce((p, c) => {
+                label: `Gry treningowe, łącznie: ${value.reduce((p, c) => {
                   return p + c
                 })}`,
                 d: value,
@@ -97,6 +97,10 @@ export default {
   flex-wrap: wrap;
   gap: 40px;
   margin-bottom: 10px;
+}
+
+.chart-grid > * {
+  flex-grow: 1;
 }
 
 h4 {

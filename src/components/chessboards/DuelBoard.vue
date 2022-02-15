@@ -1,25 +1,26 @@
 <template>
-  <div>
+  <div class="board-main">
     <div
       id="duel-board"
       @click.exact="highlightSquare"
       @click.ctrl="removeHighlight"
     ></div>
     <div class="buttons">
+      <button v-on:click="resetBoard" title="Rozpocznij grę od nowa.">
+        Nowa gra
+      </button>
       <button
-        v-on:click="resetBoard"
-        title="Reset game state and start a new one."
+        v-on:click="copyPgn"
+        title="Skopiuj obecnie rozgrywaną grę w formacie PGN."
       >
-        New Game
-      </button>
-      <button v-on:click="copyPgn" title="Copy an existing game in PGN format.">
-        Copy PGN
+        Skopiuj PGN gry
       </button>
       <button
+        class="highlight-button"
         v-on:click="removeHighlight"
-        title="Remove Highlighting from the board."
+        title="Usuń wszystkie podświetlenia z planszy."
       >
-        Remove Highlighting
+        Usuń podświetlenie
       </button>
     </div>
   </div>
@@ -70,15 +71,15 @@ export default {
           if (game.in_checkmate()) {
             setTimeout(() => {
               this.emitSaveGame();
-              alert("It's checkmate! You win!");
-            }, 200);
+              alert("Szach i Mat! Zwycięstwo!");
+            }, 300);
             return false;
           }
           if (game.in_draw()) {
             setTimeout(() => {
               this.emitSaveGame();
-              alert("It's a draw!");
-            }, 200);
+              alert("Remis!");
+            }, 300);
             return false;
           }
 
@@ -91,6 +92,10 @@ export default {
           this.$emit("history", game.pgn());
           this.pgn = game.pgn();
         },
+      });
+      window.addEventListener("resize", () => {
+        board.resize();
+        console.log("resized called");
       });
     });
   },
@@ -138,15 +143,15 @@ export default {
                 if (game.in_checkmate()) {
                   setTimeout(() => {
                     this.emitSaveGame();
-                    alert("It's checkmate! You loose!");
-                  }, 200);
+                    alert("Szach i Mat! Przegrałeś.");
+                  }, 300);
                   return false;
                 }
                 if (game.in_draw()) {
                   setTimeout(() => {
                     this.emitSaveGame();
-                    alert("It's a draw!");
-                  }, 200);
+                    alert("Remis!");
+                  }, 300);
                   return false;
                 }
               }
@@ -218,15 +223,14 @@ export default {
 
 <style scoped>
 #duel-board {
-  width: 500px;
+  width: 600px;
+  touch-action: none;
 }
 
-.highlighted[class*="white"] {
-  background: rgb(255, 118, 118);
-}
-
-.highlighted[class*="black"] {
-  background: rgb(255, 70, 70);
+@media only screen and (max-width: 650px) {
+  .highlight-button {
+    display: none;
+  }
 }
 
 .buttons {
@@ -240,7 +244,9 @@ button {
   border-radius: 5px;
   outline: none;
   border: transparent 2px solid;
-  background: rgb(255, 226, 214);
+  background: var(--button-color);
+  color: white;
+  cursor: pointer;
 }
 
 button:hover {
@@ -249,5 +255,12 @@ button:hover {
 
 button:active {
   border: lightcoral 2px solid;
+}
+
+@media screen and (max-width: 650px) {
+  #duel-board {
+    width: 100%;
+    height: auto;
+  }
 }
 </style>

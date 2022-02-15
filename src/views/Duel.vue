@@ -1,15 +1,15 @@
 <template>
   <div>
-    <Header title="Duel" description="Select an engine from the first dropdown and play a game against it." />
+    <Header title="Pojedynek" description="Wybierz silnik, z którym chcesz rozegrać partię i spróbuj go pokonać." />
     <div class="split-horizontal">
       <CustomSelect
         :options="engine_options"
         @selectedOption="updateEngine"
         Name="Engine"
-        placeholder="Select an engine to play with"
+        placeholder="Wybierz silnik szachowy"
         :disableSelect="disableEngineSelect"
       ></CustomSelect>
-      <h4>Select pawn promotion type</h4>
+      <h4>Wybierz promocję pionka</h4>
       <CustomSelect
         :options="promotion_options"
         @selectedOption="updatePromotion"
@@ -52,56 +52,25 @@ export default {
         {
           key: 1,
           value: "q",
-          text: "Queen",
+          text: "Królowa",
         },
         {
           key: 2,
           value: "r",
-          text: "Rook",
+          text: "Wieża",
         },
         {
           key: 3,
           value: "n",
-          text: "Knight",
+          text: "Skoczek",
         },
         {
           key: 4,
           value: "b",
-          text: "Bishop",
+          text: "Goniec",
         },
       ],
-      engine_options: [
-        {
-          key: 1,
-          value: "random",
-          text: "Random Engine",
-        },
-        {
-          key: 2,
-          value: "minimax",
-          text: "Minimax Engine",
-        },
-        {
-          key: 3,
-          value: "montecarlo",
-          text: "Monte Carlo Engine",
-        },
-        {
-          key: 4,
-          value: "stockfish",
-          text: "Stockfish Engine",
-        },
-        {
-          key: 5,
-          value: "ai",
-          text: "Ai Engine, Implementation 1",
-        },
-        {
-          key: 6,
-          value: "ai2",
-          text: "Ai Engine, Implementation 2",
-        },
-      ],
+      engine_options: window.engineOptions
     };
   },
   methods: {
@@ -131,7 +100,6 @@ export default {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify(json)
       })
@@ -139,7 +107,10 @@ export default {
         return data.json()
       })
       .then((data) => {
-        console.log(data)
+        // console.log(data)
+      })
+      .catch((err) => {
+        console.error(err)
       })
     },
   },
@@ -155,6 +126,8 @@ export default {
   flex-direction: column;
   gap: 7px;
   width: 350px;
+  margin-top: 30px;
+  margin-bottom: 15px;
 }
 
 .split-horizontal > * {

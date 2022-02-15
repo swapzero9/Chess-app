@@ -18,21 +18,22 @@ export default {
   props: {
     canvasId: String,
     chartData: Object,
+    start: Number,
   },
   methods: {
     createChart() {
       const el = document.getElementById(this.canvasId);
       const ctx = el.getContext("2d");
       let d = [];
-      let i = 0;
+      let i = this.start;
       for (let el of this.chartData.records) {
-        i++;
         d.push({
           label: el.label,
           data: el.d,
           borderWidth: 1,
           backgroundColor: this.chartData.colors[i],
         });
+        i++;
       }
       const chart = new Chart(ctx, {
         type: "bar",
@@ -51,17 +52,18 @@ export default {
               text: this.chartData.title,
             },
             scales: {
-              yAxes: [{
+              y: {
                 ticks: {
+                  display: false,
                   precision: 0,
-                  stepSize: 1,
                   callback: (value) => {
-                    if (Number.isInteger(value)) {
+                    console.log(value)
+                    if (value % 1 == 0) {
                       return value
                     }
                   }
                 }
-              }]
+              }
             }
           },
         },
@@ -104,11 +106,10 @@ export default {
 canvas {
   max-width: 400px;
   max-height: 400px;
+  width: 100%;
+  height: 100%;
   background: rgba(255, 255, 255, 0.925);
   border-radius: 20px;
   padding: 8px 16px;
--webkit-box-shadow: inset 0px 0px 40px 0px rgba(187, 187, 187, 1);
--moz-box-shadow: inset 0px 0px 40px 0px rgba(187, 187, 187, 1);
-box-shadow: inset 0px 0px 40px 0px rgba(187, 187, 187, 1);
 }
 </style>

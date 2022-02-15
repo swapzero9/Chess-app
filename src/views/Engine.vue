@@ -1,24 +1,24 @@
 <template>
   <div>
-    <Header title="Engine" description="Select two engine players and let them battle against each other. Note that the game setup can take a few minutes, since the game is played on a backend server."/>
+    <Header title="Sparing silników" description="Wybierz dwa silniki, które mają rozegrać partię między sobą. Gry mogą zająć do kilku minut w zależności od wybranego silnika."/>
     <div class="select-engines">
-      <h5>Select white player</h5>
-      <h5>Select black player</h5>
+      <h5>Wybierz gracza białego</h5>
+      <h5>Wybierz gracza czarnego</h5>
       <CustomSelect
         :options="engine_options"
         @selectedOption="updatePlayerWhite"
         Name="PlayerWhite"
-        placeholder="Pick me!"
+        placeholder="Białe bierki"
       />
       <CustomSelect
         :options="engine_options"
         @selectedOption="updatePlayerBlack"
         Name="PlayerBlack"
-        placeholder="Pick me!"
+        placeholder="Czarne Bierki"
       />
       <div class="buttons">
-        <button @click="startGame">Start the Game!</button>
-        <button v-if="!showLoader" @click="copyPGN">Copy PGN</button>
+        <button @click="startGame">Rozpocznij grę!</button>
+        <button v-if="!showLoader" @click="copyPGN">Skopiuj PGN gry</button>
         <Loader v-if="showLoader" />
       </div>
     </div>
@@ -52,38 +52,7 @@ export default {
       playerWhite: "",
       playerBlack: "",
       showLoader: false,
-      engine_options: [
-        {
-          key: 1,
-          value: "random",
-          text: "Random Engine",
-        },
-        {
-          key: 2,
-          value: "minimax",
-          text: "Minimax Engine",
-        },
-        {
-          key: 3,
-          value: "montecarlo",
-          text: "Monte Carlo Engine",
-        },
-        {
-          key: 4,
-          value: "stockfish",
-          text: "Stockfish Engine",
-        },
-        {
-          key: 5,
-          value: "ai",
-          text: "Ai Engine, Implementation 1",
-        },
-        {
-          key: 6,
-          value: "ai2",
-          text: "Ai Engine, Implementation 2",
-        },
-      ],
+      engine_options: window.engineOptions,
     };
   },
   methods: {
@@ -108,7 +77,7 @@ export default {
     },
     startGame() {
       if (this.playerWhite == '' || this.playerBlack == '') {
-        alert("You didn't select the engine!")
+        alert("Nie wybrano żadnego silnika!")
         return
       }
       this.showLoader = true
@@ -144,6 +113,10 @@ export default {
   display: flex;
 }
 
+.split > *:not(.main) {
+  flex-grow: 1;
+}
+
 .buttons {
   margin-top: 10px;
   display: flex;
@@ -156,7 +129,9 @@ button {
   border-radius: 5px;
   outline: none;
   border: transparent 2px solid;
-  background: rgb(255, 226, 214);
+  background: var(--button-color);
+  color: white;
+  cursor: pointer;
 }
 
 button:hover {
@@ -172,6 +147,19 @@ button:active {
   width: 600px;
   column-gap: 20px;
   grid-template-columns: 1fr 1fr;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+@media screen and (max-width: 850px) {
+  .select-engines {
+    grid-template-columns: 1fr;
+    gap: 15px
+  }
+
+  .select-engines > h5 {
+    display: none;
+  }
 }
 
 .select-engines > h5 {

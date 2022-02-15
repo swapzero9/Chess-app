@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="board-main">
     <h3 v-if="whitePlayerName">{{ whitePlayerName }}</h3>
     <div
       id="training-board"
@@ -8,9 +8,10 @@
     ></div>
     <h3 v-if="whitePlayerName">{{ blackPlayerName }}</h3>
     <div class="buttons">
-      <button title="Unmake the last move that was done on the board." v-if=!buttonDisabled @click="movePop">Move back</button>
-      <button title="Make the next move in history on the board." v-if=!buttonDisabled @click="moveFor">Move forward</button>
-      <button title="Remove Highlighting from the board." @click="removeHighlight">Remove Highlighting</button>
+      <button title="Unmake the last move that was done on the board." v-if=!buttonDisabled @click="movePop"><i class="fas fa-arrow-left"></i></button>
+      <button title="Make the next move in history on the board." v-if=!buttonDisabled @click="moveFor"><i class="fas fa-arrow-right"></i></button>
+      <button class="highlight-button" title="Usuń podświetlenie pól z szachownicy" @click="removeHighlight">Usuń podświetlenie</button>
+      <input style="display: none" type="range" min="100" max="1000" v-model="gameSpeed">
     </div>
   </div>
 </template>
@@ -27,7 +28,10 @@ export default {
     board = ChessBoard("training-board", {
       draggable: false,
     });
-    board.start()
+    board.start();
+    window.addEventListener("resize", () => {
+        board.resize();
+      });
   },
   props: {
     gamePgn: String
@@ -72,11 +76,12 @@ export default {
       await this.timeout(1000);
       for (let move of moves) {
         this.makeMove(move, game);
-        await this.timeout(350);
+        await this.timeout(this.gameSpeed);
       }
       this.buttonDisabled = false
     },
     makeMove(move, game) {
+      console.log(this.gameSpeed)
       this.index++;
       game.move(move);
       board.position(game.fen());
@@ -126,6 +131,7 @@ export default {
       buttonDisabled: false,
       whitePlayerName: "",
       blackPlayerName: "",
+      gameSpeed: 400,
       pgnArray: Array,
       chessHistory: Array,
       index: Number,
@@ -136,29 +142,30 @@ export default {
 
 <style scoped>
 #training-board {
-  width: 500px;
+  width: 600px;
 }
 
-.highlighted[class*="white"] {
-  background: rgb(255, 118, 118);
-}
-
-.highlighted[class*="black"] {
-  background: rgb(255, 70, 70);
+@media screen and (max-width: 650px) {
+  #training-board {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .buttons {
   margin-top: 15px;
 }
 
-button {
+button {  
   margin: 7px;
   padding: 7px;
   font-size: 14px;
   border-radius: 5px;
   outline: none;
   border: transparent 2px solid;
-  background: rgb(255, 226, 214);
+  background: var(--button-color);
+  color: white;
+  cursor: pointer;
 }
 
 button:hover {
@@ -171,5 +178,11 @@ button:active {
 
 h3 {
   margin: 4px 0;
+}
+
+@media only screen and (max-width: 650px) {
+  .highlight-button {
+    display: none;
+  }
 }
 </style>

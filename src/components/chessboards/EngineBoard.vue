@@ -1,10 +1,32 @@
 <template>
-  <div>
-    <div id="engine-board" @click.exact="highlightSquare" @click.ctrl.prevent="removeHighlight"></div>
+  <div class="board-main">
+    <div
+      id="engine-board"
+      @click.exact="highlightSquare"
+      @click.ctrl.prevent="removeHighlight"
+    ></div>
     <div class="buttons">
-      <button title="Unmake the last move that was done on the board." v-if=!buttonDisabled @click="movePop">Move back</button>
-      <button title="Make the next move in history on the board." v-if=!buttonDisabled @click="moveFor">Move forward</button>
-      <button title="Remove Highlighting from the board." @click="removeHighlight">Remove Highlighting</button>
+      <button
+        title="Cofnij ruch w partii."
+        v-if="!buttonDisabled"
+        @click="movePop"
+      >
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <button
+        title="Wykonaj kolejny ruch w partii"
+        v-if="!buttonDisabled"
+        @click="moveFor"
+      >
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <button
+        class="highlight-button"
+        title="Usuń podświetlenie pól na szachownicy."
+        @click="removeHighlight"
+      >
+        Usuń podświetlenie
+      </button>
     </div>
   </div>
 </template>
@@ -22,16 +44,20 @@ export default {
       draggable: false,
     });
     board.start();
+    window.addEventListener("resize", () => {
+      board.resize();
+      console.log("resized called");
+    });
   },
   data() {
     return {
       chessHistory: Array,
       index: Number,
-      buttonDisabled: true
+      buttonDisabled: true,
     };
   },
   props: {
-    gamePgn: String
+    gamePgn: String,
   },
   methods: {
     timeout(ms) {
@@ -71,15 +97,15 @@ export default {
       }
     },
     setupGame(pgn) {
-      this.removeHighlight()
-      this.chessHistory = []
-      this.buttonDisabled = true
-      let game = Chess()
-      game.load_pgn(pgn)
-      let moves = game.history()
-      game.reset()
-      this.index = -1
-      this.playGame(moves, game)
+      this.removeHighlight();
+      this.chessHistory = [];
+      this.buttonDisabled = true;
+      let game = Chess();
+      game.load_pgn(pgn);
+      let moves = game.history();
+      game.reset();
+      this.index = -1;
+      this.playGame(moves, game);
     },
     async playGame(moves, game) {
       this.index = -1;
@@ -88,7 +114,7 @@ export default {
         this.makeMove(move, game);
         await this.timeout(400);
       }
-      this.buttonDisabled = false
+      this.buttonDisabled = false;
     },
     makeMove(move, game) {
       this.index++;
@@ -102,30 +128,35 @@ export default {
     gamePgn: {
       immediate: true,
       handler(cur, old) {
-        if (cur != '' && cur != old) {
-          this.setupGame(cur)
+        if (cur != "" && cur != old) {
+          this.setupGame(cur);
         }
       },
     },
-  }
+  },
 };
 </script>
 
-<style>
+<style scoped>
 #engine-board {
-  width: 500px;
+  width: 600px;
+  touch-action: none;
 }
 
-.highlighted[class*="white"] {
-  background: rgb(255, 118, 118);
-}
+@media only screen and (max-width: 650px) {
+  .buttons {
+    margin-top: 15px;
+  }
 
-.highlighted[class*="black"] {
-  background: rgb(255, 70, 70);
-}
+  
+  .highlight-button {
+    display: none;
+  }
 
-.buttons {
-  margin-top: 15px;
+  #engine-board {
+    width: 100%;
+    height: auto;
+  }
 }
 
 button {
@@ -135,7 +166,9 @@ button {
   border-radius: 5px;
   outline: none;
   border: transparent 2px solid;
-  background: rgb(255, 226, 214);
+  background: var(--button-color);
+  color: white;
+  cursor: pointer;
 }
 
 button:hover {

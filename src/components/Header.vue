@@ -18,5 +18,9 @@ export default {
   h1 > span {
     font-size: 15px;
     vertical-align: top;
+    margin-left: 5px;
+  }
+  h1 {
+    color: white;
   }
 </style>
