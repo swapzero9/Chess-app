@@ -113,10 +113,6 @@ export default {
   display: flex;
 }
 
-.split > *:not(.main) {
-  flex-grow: 1;
-}
-
 .buttons {
   margin-top: 10px;
   display: flex;

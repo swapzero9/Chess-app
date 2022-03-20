@@ -4,7 +4,7 @@
       <div class="logo">
         <router-link to="/">
           <i class="fas fa-chess"></i>
-          <h4>ChessApp</h4>
+          <h4>Szach</h4>
         </router-link>
       </div>
       <ul class="nav-bar">
@@ -41,7 +41,7 @@
       </ul>
     </nav>
     <div class="main-content">
-      <div class="custom-shape-divider-top-1644518673">
+      <div class="nice-title-block">
         <svg
           data-name="Layer 1"
           xmlns="http://www.w3.org/2000/svg"
@@ -60,6 +60,7 @@
           ></path>
         </svg>
       </div>
+      <div class="title-block"></div>
       <router-view />
     </div>
   </div>
@@ -70,18 +71,18 @@ export default {
   name: "App",
   mounted() {
     window.engineNamesByKeys = {
-      random: "Silnik ruchów przypadkowych",
-      minimax: "Silnik MinMax",
-      montecarlo: "Silnik MonteCarlo",
-      stockfish: "Stockfish",
-      ai: "Silnik AI, implementacja 1",
-      ai2: "Silnik AI, implementacja 2",
-      AiComputer: "Silnik AI, implementacja 1",
-      AiComputer2: "Silnik AI, implementacja 2",
-      MiniMaxComputer: "Silnik MinMax",
-      MonteCarloComputer: "Silnik MonteCarlo",
-      RandomComputer: "Silnik ruchów przypadkowych",
-      StockfishComputer: "Stockfish",
+      "random": "Silnik ruchów przypadkowych",
+      "minimax": "Silnik MinMax",
+      "montecarlo": "Silnik MonteCarlo",
+      "stockfish": "Stockfish",
+      "ai": "Silnik AI, implementacja 1",
+      "ai2": "Silnik AI, implementacja 2",
+      "AiComputer": "Silnik AI, implementacja 1",
+      "AiComputer2": "Silnik AI, implementacja 2",
+      "MiniMaxComputer": "Silnik MinMax",
+      "MonteCarloComputer": "Silnik MonteCarlo",
+      "RandomComputer": "Silnik ruchów przypadkowych",
+      "StockfishComputer": "Stockfish",
     };
     window.engineOptions = [
       {
@@ -194,13 +195,29 @@ nav {
   }
 
   .main-content {
-    max-width: calc(100% - 3em);
+    max-width: calc(100% - 2em);
     margin: auto;
     margin-bottom: 80px;
   }
 
   .board-main {
     flex-grow: 1;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .nav-bar {
+    gap: 0px !important;
+    flex-basis: 100%;
+  }
+
+  .nav-item {
+    padding: .75em !important;
+    flex-grow: 1;
+  }
+
+  .nav-item > a > i {
+    flex-basis: 100% !important;
   }
 }
 
@@ -216,7 +233,7 @@ nav {
 
 .logo > a {
   text-decoration: none;
-  color: white;
+  color: rgb(255, 217, 224);
   display: flex;
   padding: 0.5em 1rem;
 }
@@ -251,7 +268,7 @@ nav {
 
 .nav-item {
   flex-basis: 100%;
-  padding: 1em 1em;
+  padding: 1em;
 }
 
 .nav-item > a {
@@ -288,26 +305,71 @@ nav {
   transition: color 200ms ease-in-out;
 }
 
-.custom-shape-divider-top-1644518673 {
+.nice-title-block {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   overflow: hidden;
   line-height: 0;
   z-index: -1;
 }
 
-.custom-shape-divider-top-1644518673 svg {
+.nice-title-block svg {
   position: relative;
   display: block;
   width: calc(190% + 1.3px);
-  height: 85px;
+  height: 90px;
   transform: rotateY(180deg);
 }
 
-.custom-shape-divider-top-1644518673 .shape-fill {
+.nice-title-block .shape-fill {
   fill: url("#top-gradient");
+}
+
+.title-block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 80px;
+  background: var(--palette-5);
+  z-index: -1;
+}
+
+@media screen and (min-width: 1100px) {
+  .nice-title-block {
+    display: block;
+  }
+
+  .title-block {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1100px) and (min-width: 650px){
+  .title-block {
+    display: none;
+  }
+
+  .nice-title-block svg {
+    width: calc(300% + 1.3px) !important;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .title-block {
+    display: block;
+  }
+  .nice-title-block {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .title-block {
+    height: 120px !important;
+  }
 }
 
 @media (hover: hover) {
@@ -334,7 +396,7 @@ nav {
   }
 
   .logo:hover > a > * {
-    color: rgb(171, 243, 227);
+    color: rgb(255, 104, 134);
   }
 }
 </style>

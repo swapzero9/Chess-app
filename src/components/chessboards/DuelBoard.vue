@@ -95,7 +95,6 @@ export default {
       });
       window.addEventListener("resize", () => {
         board.resize();
-        console.log("resized called");
       });
     });
   },

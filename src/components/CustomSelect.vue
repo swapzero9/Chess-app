@@ -64,7 +64,8 @@ select {
   box-shadow: 0 0 0.6em 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
   color: black;
-  /* <option> colors */
+  width: 100%;
+  max-width: fit-content;
   background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg)
       no-repeat right 0.8em center / 1.4em,
     linear-gradient(
@@ -76,5 +77,11 @@ select {
 option {
   color: inherit;
   background-color: rgb(126, 198, 226, 0.2);
+}
+
+@media screen and (max-width: 360px) {
+  select {
+    font-size: 12px;
+  }
 }
 </style>

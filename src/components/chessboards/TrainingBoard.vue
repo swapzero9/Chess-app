@@ -1,12 +1,12 @@
 <template>
   <div class="board-main">
-    <h3 v-if="whitePlayerName">{{ whitePlayerName }}</h3>
+    <h3 v-if="blackPlayerName">{{ blackPlayerName }}</h3>
     <div
       id="training-board"
       @click.exact="highlightSquare"
       @click.ctrl.prevent.exact="removeHighlight"
     ></div>
-    <h3 v-if="whitePlayerName">{{ blackPlayerName }}</h3>
+    <h3 v-if="whitePlayerName">{{ whitePlayerName }}</h3>
     <div class="buttons">
       <button title="Unmake the last move that was done on the board." v-if=!buttonDisabled @click="movePop"><i class="fas fa-arrow-left"></i></button>
       <button title="Make the next move in history on the board." v-if=!buttonDisabled @click="moveFor"><i class="fas fa-arrow-right"></i></button>
@@ -81,7 +81,6 @@ export default {
       this.buttonDisabled = false
     },
     makeMove(move, game) {
-      console.log(this.gameSpeed)
       this.index++;
       game.move(move);
       board.position(game.fen());
@@ -105,8 +104,13 @@ export default {
     },
     getPlayerNames(pgn) {
       // console.log(pgn)
-      this.whitePlayerName = /White "(.*)"/gmi.exec(pgn)[1]
-      this.blackPlayerName = /Black "(.*)"/gmi.exec(pgn)[1]
+      let wp = window.engineNamesByKeys[/White "(.*)"/gmi.exec(pgn)[1]]
+      let bp = window.engineNamesByKeys[/Black "(.*)"/gmi.exec(pgn)[1]]
+      let res = /Result "(.*)-(.*)"/gmi.exec(pgn)
+      wp = `${wp}, ${res[1]}`
+      bp = `${bp}, ${res[2]}`
+      this.whitePlayerName = wp
+      this.blackPlayerName = bp
     }
   },
   watch: {

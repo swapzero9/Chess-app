@@ -46,7 +46,6 @@ export default {
     board.start();
     window.addEventListener("resize", () => {
       board.resize();
-      console.log("resized called");
     });
   },
   data() {
@@ -147,7 +146,6 @@ export default {
   .buttons {
     margin-top: 15px;
   }
-
   
   .highlight-button {
     display: none;

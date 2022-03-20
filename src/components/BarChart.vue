@@ -57,7 +57,6 @@ export default {
                   display: false,
                   precision: 0,
                   callback: (value) => {
-                    console.log(value)
                     if (value % 1 == 0) {
                       return value
                     }

@@ -57,7 +57,6 @@ export default {
       this.hist = data;
     },
     disableStart(data) {
-      console.log(data)
       this.disableStartButton = data
     },
     getGame() {
@@ -144,6 +143,10 @@ export default {
 
 .split {
   display: flex;
+}
+
+.select-nodes {
+  margin-top: 25px;
 }
 
 .select-nodes h4 {
