@@ -141,6 +141,7 @@ body {
   margin: 0;
   padding: 0;
   background: var(--palette-1);
+  overflow-x: hidden;
 }
 body *:not(i) {
   font-family: "Roboto Mono", monospace !important;
